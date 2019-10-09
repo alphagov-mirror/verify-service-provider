@@ -25,6 +25,7 @@ import uk.gov.ida.verifyserviceprovider.resources.VersionNumberResource;
 import uk.gov.ida.verifyserviceprovider.services.AssertionTranslator;
 import uk.gov.ida.verifyserviceprovider.services.ClassifyingAssertionTranslator;
 import uk.gov.ida.verifyserviceprovider.services.EidasAssertionTranslator;
+import uk.gov.ida.verifyserviceprovider.services.EidasUnsignedAssertionTranslator;
 import uk.gov.ida.verifyserviceprovider.services.EntityIdService;
 import uk.gov.ida.verifyserviceprovider.services.ResponseService;
 import uk.gov.ida.verifyserviceprovider.services.VerifyAssertionTranslator;
@@ -134,7 +135,7 @@ public class VerifyServiceProviderFactory {
         );
 
         EidasMetadataResolverRepository eidasMetadataResolverRepository = getEidasMetadataResolverRepository();
-        Optional<EidasValidatorFactory> eidasValidatorFactory = Optional.of(new EidasValidatorFactory(eidasMetadataResolverRepository));
+        EidasValidatorFactory eidasValidatorFactory = new EidasValidatorFactory(eidasMetadataResolverRepository);
 
         EidasAssertionTranslator eidasAssertionService = responseFactory.createEidasAssertionService(
                 dateTimeComparator,
@@ -143,14 +144,24 @@ public class VerifyServiceProviderFactory {
                 configuration.getHashingEntityId()
         );
 
-        AssertionTranslator assertionTranslator = new ClassifyingAssertionTranslator(verifyAssertionService, eidasAssertionService);
+        EidasUnsignedAssertionTranslator eidasUnsignedAssertionService = responseFactory.createEidasUnsignedAssertionService(
+                dateTimeComparator,
+                eidasMetadataResolverRepository,
+                configuration.getEuropeanIdentity().get(),
+                configuration.getHashingEntityId()
+        );
+
+        AssertionTranslator assertionTranslator = new ClassifyingAssertionTranslator(
+                verifyAssertionService,
+                eidasAssertionService,
+                eidasUnsignedAssertionService);
 
         return new TranslateSamlResponseResource(
                 responseFactory.createNonMatchingResponseService(
                         getHubSignatureTrustEngine(),
                         assertionTranslator,
                         dateTimeComparator,
-                        eidasValidatorFactory
+                        Optional.of(eidasValidatorFactory)
                 ),
                 entityIdService);
     }

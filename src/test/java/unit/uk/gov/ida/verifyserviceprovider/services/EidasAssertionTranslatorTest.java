@@ -23,7 +23,7 @@ import uk.gov.ida.verifyserviceprovider.dto.TranslatedNonMatchingResponseBody;
 import uk.gov.ida.verifyserviceprovider.factories.saml.SignatureValidatorFactory;
 import uk.gov.ida.verifyserviceprovider.factories.saml.UserIdHashFactory;
 import uk.gov.ida.verifyserviceprovider.mappers.MatchingDatasetToNonMatchingAttributesMapper;
-import uk.gov.ida.verifyserviceprovider.services.EidasAssertionTranslator;
+import uk.gov.ida.verifyserviceprovider.services.BaseEidasAssertionTranslator;
 import uk.gov.ida.verifyserviceprovider.validators.ConditionsValidator;
 import uk.gov.ida.verifyserviceprovider.validators.InstantValidator;
 import uk.gov.ida.verifyserviceprovider.validators.LevelOfAssuranceValidator;
@@ -62,7 +62,7 @@ import static uk.gov.ida.verifyserviceprovider.dto.LevelOfAssurance.LEVEL_2;
 
 public class EidasAssertionTranslatorTest {
 
-    private EidasAssertionTranslator eidasAssertionService;
+    private BaseEidasAssertionTranslator eidasAssertionService;
     @Mock
     private SubjectValidator subjectValidator;
     @Mock
@@ -88,7 +88,7 @@ public class EidasAssertionTranslatorTest {
     public void setUp() {
         IdaSamlBootstrap.bootstrap();
         initMocks(this);
-        eidasAssertionService = new EidasAssertionTranslator(
+        eidasAssertionService = new BaseEidasAssertionTranslator(
             subjectValidator,
             eidasMatchingDatasetUnmarshaller,
             mdsMapper,

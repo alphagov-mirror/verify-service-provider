@@ -7,7 +7,7 @@ import org.opensaml.saml.saml2.core.Assertion;
 import uk.gov.ida.verifyserviceprovider.dto.LevelOfAssurance;
 import uk.gov.ida.verifyserviceprovider.dto.TranslatedNonMatchingResponseBody;
 import uk.gov.ida.verifyserviceprovider.services.ClassifyingAssertionTranslator;
-import uk.gov.ida.verifyserviceprovider.services.EidasAssertionTranslator;
+import uk.gov.ida.verifyserviceprovider.services.BaseEidasAssertionTranslator;
 import uk.gov.ida.verifyserviceprovider.services.VerifyAssertionTranslator;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class ClassifyingAssertionTranslatorTest {
     private VerifyAssertionTranslator verifyAssertionService;
 
     @Mock
-    private EidasAssertionTranslator eidasAssertionService;
+    private BaseEidasAssertionTranslator eidasAssertionService;
 
 
     @Before
